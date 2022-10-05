@@ -4,8 +4,8 @@
   "description": "[![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml) # Проект Mesto фронтенд + бэкенд",
   "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint ."
   },
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/vlada967/express-mesto-gha.git"
   },
-  "author": "",
+  "author": "Arkhipova Vlada",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/vlada967/express-mesto-gha/issues"
