@@ -44,7 +44,6 @@ const updateUser = (req, res) => {
         upsert: true
     })
         .then(user => {
-            console.log(user)
             res.status(200).send({ data: user })
         })
         .catch((err) => {

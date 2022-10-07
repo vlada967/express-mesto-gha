@@ -11,7 +11,6 @@ const createCard = (req, res) => {
     return Card.create({ name, link, owner: req.user._id })
         .then(card => res.status(200).send({ data: card }))
         .catch((err) => {
-            console.log(err)
             if (err.name === "ValidationError") {
                 return res.status(400).send({ message: 'Некорректные данные' })
             }
@@ -21,8 +20,18 @@ const createCard = (req, res) => {
 
 const deleteById = (req, res) => {
     return Card.findByIdAndDelete(req.params.cardId)
-        .then(() => res.status(200).send({ message: 'Карточка удалена' }))
-        .catch(() => res.status(404).send({ message: 'Карточка не найдена' }));
+        .then(() => {
+            if (!card) {
+                return res.status(404).send({ message: 'Карточка не найдена' })
+            }
+            res.status(200).send({ message: 'Карточка удалена' })
+        })
+        .catch(err => {
+            if (err.name === "CastError") {
+                return res.status(400).send({ message: 'Некорректные данные' })
+            }
+            res.status(500).send({ message: 'Произошла ошибка' })
+        });
 };
 
 const likeCard = (req, res) => {
@@ -31,8 +40,18 @@ const likeCard = (req, res) => {
         { $addToSet: { likes: req.user._id } },
         { new: true },
     )
-        .then(card => res.status(200).send({ data: card }))
-        .catch(err => res.status(404).send({ message: 'Карточка не найдена' }));
+        .then(card => {
+            if (!card) {
+                return res.status(404).send({ message: 'Карточка не найдена' })
+            }
+            res.status(200).send({ data: card })
+        })
+        .catch(err => {
+            if (err.name === "CastError") {
+                return res.status(400).send({ message: 'Некорректные данные' })
+            }
+            res.status(500).send({ message: 'Произошла ошибка' })
+        });
 };
 
 const dislikeCard = (req, res) => {
@@ -41,8 +60,18 @@ const dislikeCard = (req, res) => {
         { $pull: { likes: req.user._id } },
         { new: true },
     )
-        .then(card => res.status(200).send({ data: card }))
-        .catch(err => res.status(404).send({ message: 'Карточка не найдена' }));
+        .then(card => {
+            if (!card) {
+                return res.status(404).send({ message: 'Карточка не найдена' })
+            }
+            res.status(200).send({ data: card })
+        })
+        .catch(err => {
+            if (err.name === "CastError") {
+                return res.status(400).send({ message: 'Некорректные данные' })
+            }
+            res.status(500).send({ message: 'Произошла ошибка' })
+        });
 };
 
 module.exports = { getCards, createCard, deleteById, likeCard, dislikeCard };
