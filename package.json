@@ -19,7 +19,12 @@
     "url": "https://github.com/vlada967/express-mesto-gha/issues"
   },
   "homepage": "https://github.com/vlada967/express-mesto-gha#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^8.11.0",
+    "eslint-plugin-import": "^8.11.0",
+    "nodemon": "^8.11.0"
+  },
   "dependencies": {
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
