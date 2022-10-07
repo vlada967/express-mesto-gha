@@ -7,14 +7,20 @@ const getUsers = (req, res) => {
 };
 
 const findById = (req, res) => {
-    return User.find(req.params.id)
+    return User.findById(req.params.userId)
         .then(user => {
             if (!user) {
-                return res.status(400).send({ message: 'Пользователя с таким id нет' })
+                return res.status(404).send({ message: 'Пользователя с таким id нет' })
             }
             res.status(200).send({ data: user })
         })
-        .catch(err => res.status(404).send({ message: 'Запрашиваемый пользователь не найден' }));
+        .catch(err => {
+            console.log(err);
+            if (err.name === "CastError") {
+                return res.status(400).send({ message: 'Некорректные данные' })
+            }
+            res.status(500).send({ message: 'Произошла ошибка' })
+        });
 };
 
 const createUser = (req, res) => {
@@ -22,7 +28,7 @@ const createUser = (req, res) => {
     return User.create({ name, about, avatar })
         .then(user => res.status(200).send({ data: user }))
         .catch((err) => {
-            if (err.name === "ValidationError") {
+            if (err.name === "CastError") {
                 return res.status(400).send({ message: 'Некорректные данные' })
             }
             res.status(500).send({ message: 'Произошла ошибка' })
@@ -34,7 +40,7 @@ const updateUser = (req, res) => {
     return User.findByIdAndUpdate(req.user._id, { name, about, avatar })
         .then(user => res.status(200).send({ data: user }))
         .catch((err) => {
-            if (err.name === "ValidationError") {
+            if (err.name === "CastError") {
                 return res.status(400).send({ message: 'Некорректные данные' })
             }
             res.status(500).send({ message: 'Произошла ошибка' })
@@ -46,7 +52,7 @@ const updateAvatar = (req, res) => {
     return User.findByIdAndUpdate(req.user._id, { avatar })
         .then(user => res.status(200).send({ data: user }))
         .catch((err) => {
-            if (err.name === "ValidationError") {
+            if (err.name === "CastError") {
                 return res.status(400).send({ message: 'Некорректные данные' })
             }
             res.status(500).send({ message: 'Произошла ошибка' })
