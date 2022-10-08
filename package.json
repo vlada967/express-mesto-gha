@@ -1,7 +1,7 @@
 {
   "name": "express-mesto-gha",
   "version": "1.0.0",
-  "description": "[![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml) # Проект Mesto фронтенд + бэкенд",
+  "description": "Проект Место бэкенд",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -19,15 +19,15 @@
     "url": "https://github.com/vlada967/express-mesto-gha/issues"
   },
   "homepage": "https://github.com/vlada967/express-mesto-gha#readme",
-  "devDependencies": {
-    "eslint": "^8.11.0",
-    "eslint-config-airbnb-base": "^8.11.0",
-    "eslint-plugin-import": "^8.11.0",
-    "nodemon": "^8.11.0"
-  },
   "dependencies": {
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
     "mongoose": "^6.6.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.25.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.20"
   }
 }
