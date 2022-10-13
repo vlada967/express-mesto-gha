@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { NotFoundError } = require('../errors/NotFoundError');
-const { BadRequestError } = require('../errors/BadRequestError');
-const { AuthorizedError } = require('../errors/AuthorizedError');
+const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
+const AuthorizedError = require('../errors/AuthorizedError');
+const ConflictError = require('../errors/ConflictError');
 
 const getUsers = (req, res, next) => User.find({})
   .then((users) => res.send({ data: users }))
@@ -37,11 +38,17 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
+  User.find({ email })
+    .then((user) => {
+      if (user.length > 0) {
+        throw new ConflictError(`Пользователь с email '${email}' уже существует.`);
+      };
+    });
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send(user))
+    .then(({ name, about, _id, avatar, email, createdAt }) => res.send({ name, about, _id, avatar, email, createdAt }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
@@ -88,8 +95,11 @@ const updateAvatar = (req, res, next) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
+  console.log('going to find the user')
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      console.log('email is okay')
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })

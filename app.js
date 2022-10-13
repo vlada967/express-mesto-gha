@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
-// const errors = require('./middlewares/errors');
 const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/user');
 const { regexForUrl } = require('./utils/constants');
