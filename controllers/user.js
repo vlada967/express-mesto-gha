@@ -35,21 +35,20 @@ const findById = (req, res, next) => User.findById(req.params.userId)
   });
 
 const createUser = (req, res, next) => {
-  const userEmail = req.body.email;
-  const userName = req.body.name;
-  const userAbout = req.body.about;
-  const userAvatar = req.body.avatar;
+  const {
+    email, name, about, avatar, password,
+  } = req.body;
 
-  User.find({ userEmail })
+  User.find({ email })
     .then((user) => {
       if (user.length > 0) {
         next(new ConflictError('Пользователь с таким email уже существует'));
       }
     });
-  bcrypt.hash(req.body.password, 10)
+  bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
-        userName, userAbout, userAvatar, userEmail, password: hash,
+        name, about, avatar, email, password: hash,
       })
         .then(({
           name, about, _id, avatar, email, createdAt,
