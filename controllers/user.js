@@ -36,10 +36,10 @@ const findById = (req, res, next) => User.findById(req.params.userId)
 
 const createUser = (req, res, next) => {
   const {
-    email, name, about, avatar, password,
+    email: userEmail, name: userName, about: userAbout, avatar: userAvatar, password,
   } = req.body;
 
-  User.find({ email })
+  User.find({ email: userEmail })
     .then((user) => {
       if (user.length > 0) {
         next(new ConflictError('Пользователь с таким email уже существует'));
@@ -48,7 +48,7 @@ const createUser = (req, res, next) => {
   bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
-        name, about, avatar, email, password: hash,
+        name: userName, about: userAbout, avatar: userAvatar, email: userEmail, password: hash,
       })
         .then(({
           name, about, _id, avatar, email, createdAt,
