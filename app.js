@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
+const errorHandler = require('./middlewares/errorHandler');
 const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/user');
 const { regexForUrl } = require('./utils/constants');
@@ -41,17 +42,6 @@ app.use('/cards', require('./routes/card'));
 app.use('/', (req, res) => { res.status(404).send({ message: 'Неправильный адрес запроса' }); });
 
 app.use(errors());
-
-app.use((err, req, res) => {
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-});
+app.use(errorHandler);
 
 app.listen(PORT);
