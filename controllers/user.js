@@ -35,23 +35,30 @@ const findById = (req, res, next) => User.findById(req.params.userId)
   });
 
 const createUser = (req, res, next) => {
-  const {
-    name, about, avatar, email, password,
-  } = req.body;
-  User.find({ email })
+  const userEmail = req.body.email;
+  const userName = req.body.name;
+  const userAbout = req.body.about;
+  const userAvatar = req.body.avatar;
+
+  User.find({ userEmail })
     .then((user) => {
       if (user.length > 0) {
-        next(new ConflictError(`Пользователь с email '${email}' уже существует.`));
+        next(new ConflictError('Пользователь с таким email уже существует'));
       }
     });
-  bcrypt.hash(password, 10)
+  bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       User.create({
-        name, about, avatar, email, password: hash,
+        userName, userAbout, userAvatar, userEmail, password: hash,
       })
+        .then(({
+          name, about, _id, avatar, email, createdAt,
+        }) => {
+          res.send({
+            name, about, _id, avatar, email, createdAt,
+          });
+        });
     })
-    .then((name, about, _id, avatar, email, createdAt) =>
-      res.send({ name, about, _id, avatar, email, createdAt }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
@@ -95,19 +102,16 @@ const updateAvatar = (req, res, next) => {
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
-
-  console.log('going to find the user')
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      console.log('email is okay')
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })
     .catch(() => {
-      throw new AuthorizedError('Необходима авторизация');
+      next(new AuthorizedError('Необходима авторизация'));
     });
 };
 

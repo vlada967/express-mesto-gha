@@ -2,9 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
-const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/user');
 const { regexForUrl } = require('./utils/constants');
 
