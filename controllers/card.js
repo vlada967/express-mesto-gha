@@ -30,7 +30,8 @@ const deleteById = (req, res, next) => Card.findById(req.params.cardId)
     } else {
       card.delete().then(() => {
         res.send({ message: 'Карточка успешно удалена' });
-      });
+      })
+        .catch(next);
     }
   })
   .catch((err) => {
