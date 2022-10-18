@@ -49,17 +49,16 @@ const createUser = (req, res, next) => {
           res.send({
             name, about, _id, avatar, email, createdAt,
           });
+        }).catch((err) => {
+          if (err.code === 11000) {
+            next(new ConflictError('Пользователь с таким email уже существует'));
+          }
+          if (err.name === 'ValidationError') {
+            next(new BadRequestError('Некорректные данные'));
+          } else {
+            next(err);
+          }
         });
-    })
-    .catch((err) => {
-      if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
-      }
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
-      } else {
-        next(err);
-      }
     });
 };
 
