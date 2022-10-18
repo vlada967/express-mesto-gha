@@ -41,7 +41,7 @@ app.use('/users', require('./routes/user'));
 app.use('/cards', require('./routes/card'));
 
 app.use('/', () => {
-  throw new NotFoundError('Неправильный адрес запроса')
+  throw new NotFoundError('Неправильный адрес запроса');
 });
 
 app.use(errors());
