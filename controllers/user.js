@@ -5,6 +5,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const AuthorizedError = require('../errors/AuthorizedError');
 const ConflictError = require('../errors/ConflictError');
+const { NODE_ENV, JWT_SECRET_KEY } = process.env;
 
 const getUsers = (req, res, next) => User.find({})
   .then((users) => res.send({ data: users }))
@@ -35,11 +36,14 @@ const findById = (req, res, next) => User.findById(req.params.userId)
   });
 
 const createUser = (req, res, next) => {
+  console.log('BACK')
+  console.log(req.body)
   const {
     email: userEmail, name: userName, about: userAbout, avatar: userAvatar, password,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => {
+      console.log('BACK', userEmail)
       User.create({
         name: userName, about: userAbout, avatar: userAvatar, email: userEmail, password: hash,
       })
@@ -101,7 +105,7 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET_KEY : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })
     .catch(() => {

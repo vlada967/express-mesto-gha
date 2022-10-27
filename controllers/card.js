@@ -47,11 +47,13 @@ const likeCard = (req, res, next) => Card.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } },
   { new: true },
 )
+  .populate('likes')
   .then((card) => {
     if (!card) {
       throw new NotFoundError('Карточка не найдена');
     }
-    return res.send({ data: card });
+    // return res.send({ data: card });
+    return res.send(card);
   })
   .catch((err) => {
     if (err.name === 'CastError') {
@@ -66,11 +68,12 @@ const dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   { $pull: { likes: req.user._id } },
   { new: true },
 )
+  .populate('likes')
   .then((card) => {
     if (!card) {
       throw new NotFoundError('Карточка не найдена');
     }
-    return res.send({ data: card });
+    return res.send(card);
   })
   .catch((err) => {
     if (err.name === 'CastError') {
