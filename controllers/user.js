@@ -102,6 +102,10 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
+
+      console.log('NODE_ENV: ', NODE_ENV);
+      console.log('JWT_SECRET_KEY: ', JWT_SECRET_KEY);
+
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET_KEY : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })

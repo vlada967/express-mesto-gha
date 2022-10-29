@@ -71,4 +71,8 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
+const { NODE_ENV, JWT_SECRET_KEY } = process.env;
+console.log('NODE_ENV: ', NODE_ENV);
+console.log('JWT_SECRET_KEY: ', JWT_SECRET_KEY);
+
 app.listen(PORT);
