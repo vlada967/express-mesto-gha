@@ -5,7 +5,8 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const AuthorizedError = require('../errors/AuthorizedError');
 const ConflictError = require('../errors/ConflictError');
-require('dotenv').config()
+require('dotenv').config();
+
 const { NODE_ENV, JWT_SECRET_KEY } = process.env;
 
 const getUsers = (req, res, next) => User.find({})
@@ -103,10 +104,6 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-
-      console.log('NODE_ENV: ', NODE_ENV);
-      console.log('JWT_SECRET_KEY: ', JWT_SECRET_KEY);
-
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET_KEY : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })
